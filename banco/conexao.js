@@ -24,28 +24,36 @@ async function connect() {
   //guardando para usar sempre o mesmo
   global.connection = pool;
   return pool.connect();   
+  
+  module.exports = pool;
+
 }
 
 connect();
 
-async function getApartamentos(){
-  const apto = await connect();
+async function getSuites(){
+  const suite = await connect();
   //const res = await apto.query("SELECT * FROM apartamento ORDER BY apt_numapa ASC;");
-  const res = await apto.query("SELECT apt_numapa, apt_desapa, apt_numocu FROM apartamento ORDER BY apt_numapa ASC;");
+  //const res = await suite.query("SELECT apt_numapa, apt_sitapa, apt_numocu FROM apartamento ORDER BY apt_numapa ASC;");
+  const res = await suite.query("SELECT apt_numapa, apt_sitapa, apt_numocu FROM apartamento ORDER BY apt_numapa ASC;");
+  return res.rows;
+}
+
+async function getSuiteslivres(){
+  const suite = await connect();
+  const res = await suite.query("SELECT apt_numapa, apt_sitapa FROM apartamento WHERE apt_sitapa = 'DES' ORDER BY apt_numapa ASC;");
+  return res.rows;
+}
+
+async function getSuitesocupadas(){
+  const suite = await connect();
+  const res = await suite.query("SELECT apt_numapa, apt_sitapa FROM apartamento WHERE apt_sitapa = 'OCU' ORDER BY apt_numapa ASC;");
   return res.rows;
 }
 
 module.exports = {
-  getApartamentos
+  getSuites,
+  getSuiteslivres,
+  getSuitesocupadas
 }
 
-//const { Pool } = require("pg");
-//const pool = new Pool({
-//  user: process.env.DB_USER,
-//  host: process.env.DB_HOST,
-//  database: process.env.DB_NAME,
-//  password: process.env.DB_PASSWORD,
-//  port: process.env.DB_PORT,
-//});
-
-//module.exports = pool;

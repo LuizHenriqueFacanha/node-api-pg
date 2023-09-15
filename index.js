@@ -12,7 +12,7 @@ const db_host = process.env.DB_HOST;
 const db_name = process.env.DB_NAME;
 
 const db = require("./banco/conexao");
-//const apto = require("./banco/apto");
+const apto = require("./banco/apto");
 
 app.use(bodyParser.json())
 app.use(
@@ -29,8 +29,21 @@ app.get('/', (request, response) => {
 
 app.get('/suites', async (req, res) => {
     console.log(`get /suites`);
-    const aptos = await db.getApartamentos();
-    res.json(aptos);
+    const suites = await db.getSuites();
+    //const aptos = await apto.getApartamentos(); --linha com erro
+    res.json(suites);
+})
+
+app.get('/suiteslivres', async (req, res) => {
+    console.log(`get /suiteslivres`);
+    const suites = await db.getSuiteslivres();
+    res.json(suites);
+})
+
+app.get('/suitesocupadas', async (req, res) => {
+    console.log(`get /suitesocupadas`);
+    const suites = await db.getSuitesocupadas();
+    res.json(suites);
 })
 
 app.listen(port, () => {
